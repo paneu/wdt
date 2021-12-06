@@ -173,7 +173,7 @@ ErrorCode ClientSocket::connect() {
     return CONN_ERROR_RETRYABLE;
   }
   socket_->setSocketTimeouts();
-  socket_->setDscp(threadCtx_.getOptions().dscp);
+  socket_->setDscp(threadCtx_.getOptions().dscp, sa_.ai_family);
   return OK;
 }
 

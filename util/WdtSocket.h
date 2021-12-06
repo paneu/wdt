@@ -107,7 +107,7 @@ class WdtSocket {
   void setSocketTimeouts();
 
   // manipulates DSCP Bits
-  void setDscp(int dscp);
+  void setDscp(int dscp, int af);
 
   ThreadCtx& getThreadCtx() {
     return threadCtx_;

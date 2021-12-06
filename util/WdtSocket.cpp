@@ -760,16 +760,16 @@ void WdtSocket::setSocketTimeouts() {
   }
 }
 
-void WdtSocket::setDscp(int dscp) {
+void WdtSocket::setDscp(int dscp, int af) {
   if (dscp > 0) {
-    if (threadCtx_.getOptions().ipv6) {
+    if (af == AF_INET6) {
       int classval = dscp << 2;
       if(setsockopt(fd_, IPPROTO_IPV6, IPV6_TCLASS, (char*)&classval,
           sizeof(classval)) != 0) {
         WPLOG(ERROR) << "Unable to set DSCP flag for " << port_ << " " << fd_;
       }
     }
-    if (threadCtx_.getOptions().ipv4) {
+    if (af == AF_INET) {
       int ip_tos = dscp << 2;
       if(setsockopt(fd_, IPPROTO_IP, IP_TOS, (char*)&ip_tos,
           sizeof(ip_tos)) != 0) {

@@ -292,7 +292,8 @@ ErrorCode ServerSocket::acceptNextConnection(int timeoutMillis,
                << peerPort_;
       socket_->setFd(fd);
       socket_->setSocketTimeouts();
-      socket_->setDscp(options.dscp);
+      int af = addrLen == 4 ? AF_INET : (addrLen == 16 ? AF_INET6 : 0);
+      socket_->setDscp(options.dscp, af);
 
       return OK;
     }
