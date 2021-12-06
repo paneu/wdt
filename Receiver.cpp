@@ -230,9 +230,19 @@ const WdtTransferRequest &Receiver::init() {
 
   if (transferRequest_.hostName.empty()) {
     char hostName[1024];
+    char domainName[1024];
+    char fqdn[2048];
     int ret = gethostname(hostName, sizeof(hostName));
     if (ret == 0) {
-      transferRequest_.hostName.assign(hostName);
+      ret = getdomainname(domainName, sizeof(domainName));
+      if (ret == 0) {
+        if(strncmp(domainName, "(none)", sizeof(domainName)) != 0) {
+	  snprintf(fqdn, sizeof(fqdn), "%s.%s", hostName, domainName);
+	} else {
+	  strncpy(fqdn, hostName, sizeof(hostName));
+	}
+      }
+      transferRequest_.hostName.assign(fqdn);
     } else {
       WPLOG(ERROR) << "Couldn't find the local host name";
       code = ERROR;
